@@ -191,7 +191,11 @@ function openCamera() {
   modal.classList.add('open');
   document.getElementById('cameraResult').style.display = 'none';
   document.getElementById('cameraStatus').textContent = 'Starting camera...';
-  startCamera();
+  try {
+    startCamera();
+  } catch (e) {
+    document.getElementById('cameraStatus').textContent = 'Camera error: ' + e.message;
+  }
 }
 
 function closeCamera() {
@@ -208,6 +212,11 @@ function toggleCamera() {
 
 function startCamera() {
   if (cameraStream) stopCamera();
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    document.getElementById('cameraStatus').textContent = 'Camera requires HTTPS. Open this page using HTTPS or a supported browser.';
+    return;
+  }
 
   var constraints = {
     video: { facingMode: facingMode, width: { ideal: 1280 }, height: { ideal: 720 } }
