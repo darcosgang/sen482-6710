@@ -240,7 +240,7 @@ function stopCamera() {
   }
 }
 
-function captureEquation() {
+async function captureEquation() {
   var video = document.getElementById('cameraPreview');
   var canvas = document.getElementById('cameraCanvas');
   var status = document.getElementById('cameraStatus');
@@ -261,13 +261,18 @@ function captureEquation() {
   status.textContent = 'Processing... Running OCR on captured image.';
   capBtn.disabled = true;
 
-  Tesseract.recognize(imageData, 'eng', {
-    logger: function (m) {
-      if (m.status === 'recognizing text') {
-        status.textContent = 'Recognizing... ' + Math.round(m.progress * 100) + '%';
+  try {
+    var worker = await Tesseract.createWorker('eng', 1, {
+      logger: function (m) {
+        if (m.status === 'recognizing text') {
+          status.textContent = 'Recognizing... ' + Math.round(m.progress * 100) + '%';
+        }
       }
-    }
-  }).then(function (result) {
+    });
+
+    var result = await worker.recognize(imageData);
+    await worker.terminate();
+
     capBtn.disabled = false;
     var text = result.data.text.trim();
     text = text.replace(/\s+/g, '');
@@ -293,8 +298,8 @@ function captureEquation() {
 
     currentExpression = text;
     updateResult();
-  }).catch(function (err) {
+  } catch (err) {
     capBtn.disabled = false;
     status.textContent = 'OCR Error: ' + err.message;
-  });
+  }
 }
