@@ -40,6 +40,25 @@ window.addEventListener("DOMContentLoaded", function () {
       btn.title = "Switch to dark mode";
     }
   }
+
+  var uploadInput = document.getElementById('imageUpload');
+  if (uploadInput) {
+    uploadInput.addEventListener('change', function (e) {
+      var file = e.target.files[0];
+      if (!file) return;
+
+      document.getElementById('cameraStatus').textContent = 'Processing uploaded image...';
+      document.getElementById('cameraResult').style.display = 'none';
+
+      var reader = new FileReader();
+      reader.onload = async function (event) {
+        await processOcr(event.target.result);
+      };
+      reader.readAsDataURL(file);
+
+      this.value = '';
+    });
+  }
 });
 
 // ------------------------------
@@ -240,26 +259,8 @@ function stopCamera() {
   }
 }
 
-async function captureEquation() {
-  var video = document.getElementById('cameraPreview');
-  var canvas = document.getElementById('cameraCanvas');
+async function processOcr(imageData) {
   var status = document.getElementById('cameraStatus');
-  var capBtn = document.getElementById('captureBtn');
-
-  if (!video.videoWidth) {
-    status.textContent = 'Camera not ready. Please wait.';
-    return;
-  }
-
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-  var ctx = canvas.getContext('2d');
-  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-  var imageData = canvas.toDataURL('image/png');
-
-  status.textContent = 'Processing... Running OCR on captured image.';
-  capBtn.disabled = true;
 
   try {
     var worker = await Tesseract.createWorker('eng', 1, {
@@ -273,7 +274,6 @@ async function captureEquation() {
     var result = await worker.recognize(imageData);
     await worker.terminate();
 
-    capBtn.disabled = false;
     var text = result.data.text.trim();
     text = text.replace(/\s+/g, '');
 
@@ -299,7 +299,36 @@ async function captureEquation() {
     currentExpression = text;
     updateResult();
   } catch (err) {
-    capBtn.disabled = false;
     status.textContent = 'OCR Error: ' + err.message;
   }
+}
+
+async function captureEquation() {
+  var video = document.getElementById('cameraPreview');
+  var canvas = document.getElementById('cameraCanvas');
+  var status = document.getElementById('cameraStatus');
+  var capBtn = document.getElementById('captureBtn');
+
+  if (!video.videoWidth) {
+    status.textContent = 'Camera not ready. Please wait.';
+    return;
+  }
+
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  var ctx = canvas.getContext('2d');
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  var imageData = canvas.toDataURL('image/png');
+
+  status.textContent = 'Processing... Running OCR on captured image.';
+  capBtn.disabled = true;
+
+  await processOcr(imageData);
+
+  capBtn.disabled = false;
+}
+
+function triggerUpload() {
+  document.getElementById('imageUpload').click();
 }

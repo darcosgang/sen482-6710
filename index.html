@@ -80,10 +80,12 @@
               <h5 style="font-weight: 700; margin-bottom: 12px;">📷 Equation Scanner</h5>
               <video class="camera-solver-preview" id="cameraPreview" autoplay playsinline></video>
               <canvas class="camera-solver-canvas" id="cameraCanvas"></canvas>
+              <input type="file" id="imageUpload" accept="image/png,image/jpeg" style="display:none">
               <div class="camera-solver-toolbar">
                 <button class="btn btn-outline-secondary" onclick="closeCamera()">✕ Close</button>
                 <button class="btn btn-primary" onclick="captureEquation()" id="captureBtn">📸 Capture & Solve</button>
                 <button class="btn btn-outline-info" onclick="toggleCamera()" id="toggleCamBtn">🔄 Flip Camera</button>
+                <button class="btn btn-success" onclick="triggerUpload()" id="uploadBtn">📁 Upload Image</button>
               </div>
               <div class="camera-solver-status" id="cameraStatus">Point the camera at an equation and tap "Capture & Solve"</div>
               <div class="camera-solver-result" id="cameraResult" style="display: none;">

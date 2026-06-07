@@ -9,7 +9,7 @@ module.exports = [
       globals: { window:'readonly', document:'readonly', localStorage:'readonly', console:'readonly',
                  module:'writable', require:'readonly', process:'readonly', navigator:'readonly',
                  evaluateExpression:'readonly', describe:'readonly', it:'readonly', expect:'readonly',
-                 Tesseract:'readonly', MediaStream:'readonly', LAST_RESULT:'writable' },
+                  Tesseract:'readonly', MediaStream:'readonly', FileReader:'readonly', LAST_RESULT:'writable' },
     },
     rules: { 'no-unused-vars':'warn', 'eqeqeq':'error', 'semi':['error','always'] },
   },
