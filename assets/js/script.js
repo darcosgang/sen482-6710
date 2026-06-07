@@ -1,8 +1,7 @@
 // ===============================
 // 🧠 SMART RESULT MEMORY FEATURE
 // ===============================
-
-let LAST_RESULT = 0;
+// LAST_RESULT is declared in src/calculator.js as a global variable
 var currentExpression = "";
 
 // ------------------------------
