@@ -7,8 +7,9 @@ module.exports = [
     languageOptions: {
       ecmaVersion: 2021, sourceType: 'commonjs',
       globals: { window:'readonly', document:'readonly', localStorage:'readonly', console:'readonly',
-                 module:'writable', require:'readonly', process:'readonly',
-                 evaluateExpression:'readonly', describe:'readonly', it:'readonly', expect:'readonly' },
+                 module:'writable', require:'readonly', process:'readonly', navigator:'readonly',
+                 evaluateExpression:'readonly', describe:'readonly', it:'readonly', expect:'readonly',
+                 Tesseract:'readonly', MediaStream:'readonly' },
     },
     rules: { 'no-unused-vars':'warn', 'eqeqeq':'error', 'semi':['error','always'] },
   },

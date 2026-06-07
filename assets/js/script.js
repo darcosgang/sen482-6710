@@ -178,3 +178,115 @@ function calculateResult() {
 function updateResult() {
   document.getElementById("result").value = currentExpression || "0";
 }
+
+// ===============================
+// 📷 CAM FEATURE — Camera & OCR
+// ===============================
+
+var cameraStream = null;
+var facingMode = 'environment';
+
+function openCamera() {
+  var modal = document.getElementById('cameraModal');
+  modal.classList.add('open');
+  document.getElementById('cameraResult').style.display = 'none';
+  document.getElementById('cameraStatus').textContent = 'Starting camera...';
+  startCamera();
+}
+
+function closeCamera() {
+  stopCamera();
+  var modal = document.getElementById('cameraModal');
+  modal.classList.remove('open');
+}
+
+function toggleCamera() {
+  facingMode = (facingMode === 'environment') ? 'user' : 'environment';
+  stopCamera();
+  startCamera();
+}
+
+function startCamera() {
+  if (cameraStream) stopCamera();
+
+  var constraints = {
+    video: { facingMode: facingMode, width: { ideal: 1280 }, height: { ideal: 720 } }
+  };
+
+  navigator.mediaDevices.getUserMedia(constraints)
+    .then(function (stream) {
+      cameraStream = stream;
+      var video = document.getElementById('cameraPreview');
+      video.srcObject = stream;
+      document.getElementById('cameraStatus').textContent = 'Camera ready. Point at an equation and capture.';
+    })
+    .catch(function (err) {
+      document.getElementById('cameraStatus').textContent = 'Camera error: ' + err.message;
+    });
+}
+
+function stopCamera() {
+  if (cameraStream) {
+    cameraStream.getTracks().forEach(function (track) { track.stop(); });
+    cameraStream = null;
+  }
+}
+
+function captureEquation() {
+  var video = document.getElementById('cameraPreview');
+  var canvas = document.getElementById('cameraCanvas');
+  var status = document.getElementById('cameraStatus');
+  var capBtn = document.getElementById('captureBtn');
+
+  if (!video.videoWidth) {
+    status.textContent = 'Camera not ready. Please wait.';
+    return;
+  }
+
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  var ctx = canvas.getContext('2d');
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  var imageData = canvas.toDataURL('image/png');
+
+  status.textContent = 'Processing... Running OCR on captured image.';
+  capBtn.disabled = true;
+
+  Tesseract.recognize(imageData, 'eng', {
+    logger: function (m) {
+      if (m.status === 'recognizing text') {
+        status.textContent = 'Recognizing... ' + Math.round(m.progress * 100) + '%';
+      }
+    }
+  }).then(function (result) {
+    capBtn.disabled = false;
+    var text = result.data.text.trim();
+    text = text.replace(/\s+/g, '');
+
+    if (!text) {
+      status.textContent = 'No equation detected. Try again.';
+      return;
+    }
+
+    text = text.replace(/x/g, '*')
+               .replace(/×/g, '*')
+               .replace(/÷/g, '/')
+               .replace(/−/g, '-')
+               .replace(/,/g, '');
+
+    document.getElementById('recognizedEquation').textContent = text;
+
+    var calcResult = calculateExpression(text);
+
+    document.getElementById('equationResult').textContent = calcResult;
+    document.getElementById('cameraResult').style.display = 'block';
+    status.textContent = 'Equation solved!';
+
+    currentExpression = text;
+    updateResult();
+  }).catch(function (err) {
+    capBtn.disabled = false;
+    status.textContent = 'OCR Error: ' + err.message;
+  });
+}
