@@ -59,6 +59,8 @@ window.addEventListener("DOMContentLoaded", function () {
       this.value = '';
     });
   }
+
+  handleSolverDeepLink();
 });
 
 // ------------------------------
@@ -331,4 +333,22 @@ async function captureEquation() {
 
 function triggerUpload() {
   document.getElementById('imageUpload').click();
+}
+
+function openUploadSolver() {
+  var modal = document.getElementById('cameraModal');
+  modal.classList.add('open');
+  document.getElementById('cameraResult').style.display = 'none';
+  document.getElementById('cameraStatus').textContent = 'Choose an equation image to solve.';
+  window.setTimeout(triggerUpload, 120);
+}
+
+function handleSolverDeepLink() {
+  if (window.location.hash === '#camera') {
+    window.setTimeout(openCamera, 120);
+  }
+
+  if (window.location.hash === '#upload') {
+    window.setTimeout(openUploadSolver, 120);
+  }
 }
