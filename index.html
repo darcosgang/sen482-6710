@@ -1,110 +1,361 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calculator</title>
+  <title>VUNA Calculator - Project Defense</title>
   <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    :root {
+      --primary: #0d6efd;
+      --primary-dark: #0b5ed7;
+      --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      --dark-bg: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      --card-light: rgba(255, 255, 255, 0.92);
+      --card-dark: rgba(45, 45, 45, 0.92);
+      --text-light: #212529;
+      --text-dark: #e0e0e0;
+      --muted-light: #6c757d;
+      --muted-dark: #adb5bd;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-light);
+      transition: background 0.3s, color 0.3s;
+    }
+    body.dark-mode {
+      background: var(--dark-bg);
+      color: var(--text-dark);
+    }
+    .theme-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      border: 1px solid rgba(0,0,0,0.08);
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(8px);
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+    .theme-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
+    body.dark-mode .theme-btn {
+      background: rgba(60,60,60,0.85);
+      border-color: rgba(255,255,255,0.1);
+    }
+    .hero {
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 100px 20px 60px;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(13,110,253,0.1);
+      color: var(--primary);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 6px 18px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+    body.dark-mode .hero-badge {
+      background: rgba(13,110,253,0.2);
+    }
+    .hero h1 {
+      font-size: 3.2rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+    }
+    .hero h1 span { color: var(--primary); }
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--muted-light);
+      max-width: 600px;
+      margin: 0 auto 32px;
+    }
+    body.dark-mode .hero p { color: var(--muted-dark); }
+    .hero .supervisor {
+      font-size: 0.95rem;
+      color: var(--muted-light);
+      margin-bottom: 8px;
+    }
+    body.dark-mode .hero .supervisor { color: var(--muted-dark); }
+    .hero .supervisor strong { color: var(--text-light); }
+    body.dark-mode .hero .supervisor strong { color: var(--text-dark); }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 36px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 16px;
+      border: none;
+      background: var(--primary);
+      color: white;
+      cursor: pointer;
+      transition: all 0.25s;
+      box-shadow: 0 8px 24px rgba(13,110,253,0.25);
+      text-decoration: none;
+    }
+    .cta-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(13,110,253,0.35);
+      background: var(--primary-dark);
+      color: white;
+    }
+    .section {
+      padding: 70px 20px;
+    }
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .section-title span { color: var(--primary); }
+    .about-text {
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: var(--muted-light);
+    }
+    body.dark-mode .about-text { color: var(--muted-dark); }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .feature-card {
+      background: var(--card-light);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 28px 22px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.3);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .feature-card:hover { transform: translateY(-5px); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
+    body.dark-mode .feature-card {
+      background: var(--card-dark);
+      border-color: rgba(255,255,255,0.06);
+    }
+    .feature-icon {
+      font-size: 2.2rem;
+      margin-bottom: 14px;
+    }
+    .feature-card h5 {
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+    }
+    .feature-card p {
+      font-size: 0.88rem;
+      color: var(--muted-light);
+      margin: 0;
+    }
+    body.dark-mode .feature-card p { color: var(--muted-dark); }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .team-card {
+      background: var(--card-light);
+      border-radius: 18px;
+      padding: 24px 18px;
+      text-align: center;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    body.dark-mode .team-card {
+      background: var(--card-dark);
+      border-color: rgba(255,255,255,0.06);
+    }
+    .team-card .avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(13,110,253,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin: 0 auto 12px;
+    }
+    .team-card h6 {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 2px;
+    }
+    .team-card .role {
+      font-size: 0.8rem;
+      color: var(--muted-light);
+    }
+    body.dark-mode .team-card .role { color: var(--muted-dark); }
+    .cta-section {
+      text-align: center;
+      padding: 60px 20px 80px;
+    }
+    .cta-section h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .cta-section p {
+      color: var(--muted-light);
+      margin-bottom: 28px;
+      font-size: 1.05rem;
+    }
+    body.dark-mode .cta-section p { color: var(--muted-dark); }
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      font-size: 0.85rem;
+      color: var(--muted-light);
+      border-top: 1px solid rgba(0,0,0,0.06);
+    }
+    body.dark-mode footer {
+      border-top-color: rgba(255,255,255,0.06);
+      color: var(--muted-dark);
+    }
+    footer a { color: var(--primary); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    @media (max-width: 576px) {
+      .hero h1 { font-size: 2.2rem; }
+      .section-title { font-size: 1.4rem; }
+      .features-grid { grid-template-columns: 1fr; }
+      .team-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
 </head>
-
 <body>
-  <!-- Theme Toggle Button -->
-  <button class="btn btn-outline-secondary theme-toggle-btn" id="theme-toggle" onclick="toggleTheme()"
-    title="Toggle dark/light mode">
-    🌙
-  </button>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-6 col-md-6 col-sm-8">
-        <div class="border border-dotted border-3 rounded-3 p-3 mb-4 bg-white bg-opacity-50">
-          <h4 class="text-center group-header mb-0">VUNA CALCULATOR</h4>
-          <p class="text-center text-small text-muted">
-            <i>Created by set 2025/26 Software Engineering</i>
-          </p>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="card calculator-card">
-              <div class="card-body p-4">
-                <div class="calculator">
-                  <div class="display-container">
-                    <input type="text" class="form-control" id="result" placeholder="0" disabled />
-                  </div>
+  <button class="theme-btn" id="themeToggle" onclick="toggleHomeTheme()" title="Toggle dark/light mode">🌙</button>
 
-                  <div class="btn-grid">
-                    <button class="btn btn-light" onclick="bracketToResult('(')">(</button>
-                    <button class="btn btn-light" onclick="bracketToResult(')')">)</button>
-                    <button class="btn btn-light" onclick="backspace()">←</button>
+  <section class="hero">
+    <div>
+      <div class="hero-badge">Software Engineering Project</div>
+      <h1>VUNA <span>Calculator</span></h1>
+      <p>A modern, feature-rich calculator with CAM-powered equation scanning, built by Set 2025/26.</p>
+      <div class="supervisor">Supervised by <strong>Mr. Iyke</strong></div>
+      <div class="supervisor" style="margin-bottom:28px;">Department of Computer Engineering</div>
+      <a href="calc.html" class="cta-btn">Launch Calculator →</a>
+    </div>
+  </section>
 
-                    <!-- Row trig -->
-                    <button class="btn btn-action" onclick="clearResult()">AC</button>
+  <section class="section" style="padding-top:0;">
+    <div class="about-text">
+      <h2 class="section-title">About <span>the Project</span></h2>
+      <p>
+        The VUNA Calculator is a comprehensive computational tool developed as part of the Software Engineering course requirement. 
+        It features a custom expression parser (no <code>eval()</code>), support for arithmetic, trigonometric, and logarithmic functions, 
+        a CAM (OCR) scanner for solving equations from images, and an intuitive user interface with dark mode support.
+      </p>
+    </div>
+  </section>
 
-                    <!-- Row 2 -->
-                    <button class="btn btn-light" onclick="appendToResult(7)">7</button>
-                    <button class="btn btn-light" onclick="appendToResult(8)">8</button>
-                    <button class="btn btn-light" onclick="appendToResult(9)">9</button>
-
-                    <!-- Row 3 -->
-                    <button class="btn btn-operator" onclick="operatorToResult('/')">÷</button>
-                    <button class="btn btn-light" onclick="appendToResult(4)">4</button>
-                    <button class="btn btn-light" onclick="appendToResult(5)">5</button>
-                    <button class="btn btn-light" onclick="appendToResult(6)">6</button>
-
-                    <!-- Row 4 -->
-                    <button class="btn btn-operator" onclick="operatorToResult('*')">×</button>
-                    <button class="btn btn-light" onclick="appendToResult(1)">1</button>
-                    <button class="btn btn-light" onclick="appendToResult(2)">2</button>
-                    <button class="btn btn-light" onclick="appendToResult(3)">3</button>
-
-                    <!-- Row 5 -->
-                    <button class="btn btn-operator" onclick="operatorToResult('+')">+</button>
-                    <button class="btn btn-light" onclick="appendToResult('.')">.</button>
-                    <button class="btn btn-light" onclick="appendToResult(0)">0</button>
-                    <button class="btn btn-operator" onclick="percentToResult('%')">%</button>
-                    
-                    <!-- Row 9 -->
-                    <button class="btn btn-operator" onclick="operatorToResult('-')">−</button>
-
-                    <button class="btn btn-equals" onclick="calculateResult()" style="grid-column: span 4;">=</button>
-                    <button class="btn btn-special" onclick="openCamera()" style="margin-top: 12px; grid-column: span 4;">📷 CAM</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="camera-solver-modal" id="cameraModal">
-            <div class="camera-solver-card">
-              <h5 style="font-weight: 700; margin-bottom: 12px;">📷 Equation Scanner</h5>
-              <video class="camera-solver-preview" id="cameraPreview" autoplay playsinline></video>
-              <canvas class="camera-solver-canvas" id="cameraCanvas"></canvas>
-              <input type="file" id="imageUpload" accept="image/png,image/jpeg" style="display:none">
-              <div class="camera-solver-toolbar">
-                <button class="btn btn-outline-secondary" onclick="closeCamera()">✕ Close</button>
-                <button class="btn btn-primary" onclick="captureEquation()" id="captureBtn">📸 Capture & Solve</button>
-                <button class="btn btn-outline-info" onclick="toggleCamera()" id="toggleCamBtn">🔄 Flip Camera</button>
-                <button class="btn btn-success" onclick="triggerUpload()" id="uploadBtn">📁 Upload Image</button>
-              </div>
-              <div class="camera-solver-status" id="cameraStatus">Point the camera at an equation and tap "Capture & Solve"</div>
-              <div class="camera-solver-result" id="cameraResult" style="display: none;">
-                <div style="font-size: 12px; color: #6c757d; margin-bottom: 4px;">Recognized equation</div>
-                <div id="recognizedEquation" style="font-weight: 600; font-size: 16px; color: #0d6efd;"></div>
-                <div style="font-size: 12px; color: #6c757d; margin-top: 8px; margin-bottom: 4px;">Result</div>
-                <div id="equationResult" style="font-weight: 700; font-size: 22px; color: #198754;"></div>
-              </div>
-            </div>
-          </div>
-
-          <script src="src/calculator.js"></script>
-          <script src="assets/js/bootstrap.min.js"></script>
-          <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-          <script src="assets/js/script.js"></script>
-          <button id="scroll-to-calculator" title="Back to Calculator">↑</button>
-        </div>
+  <section class="section" style="background:rgba(13,110,253,0.03);">
+    <h2 class="section-title">Key <span>Features</span></h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🧮</div>
+        <h5>Expression Engine</h5>
+        <p>Custom tokenizer, shunting-yard parser, and RPN evaluator — no eval() used.</p>
       </div>
+      <div class="feature-card">
+        <div class="feature-icon">📷</div>
+        <h5>CAM / OCR Scanner</h5>
+        <p>Capture or upload an equation image and get instant results via Tesseract.js.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔢</div>
+        <h5>Advanced Math</h5>
+        <p>Trig functions (deg/rad), logarithms, powers, modulo, constants (π, e), and more.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌙</div>
+        <h5>Dark Mode</h5>
+        <p>Toggle between light and dark themes for comfortable use in any environment.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Our <span>Team</span></h2>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="avatar">👨‍💻</div>
+        <h6>Set 2025/26</h6>
+        <div class="role">Software Engineering</div>
+      </div>
+      <div class="team-card">
+        <div class="avatar">👨‍🏫</div>
+        <h6>Mr. Iyke</h6>
+        <div class="role">Project Supervisor</div>
+      </div>
+      <div class="team-card">
+        <div class="avatar">🏛️</div>
+        <h6>Computer Engineering</h6>
+        <div class="role">Department</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <h2>Ready to try it?</h2>
+    <p>Launch the calculator and explore its full capabilities.</p>
+    <a href="calc.html" class="cta-btn">Launch Calculator →</a>
+  </section>
+
+  <footer>
+    &copy; 2026 VUNA Calculator &mdash; Set 2025/26 Software Engineering &bull; Supervised by Mr. Iyke
+  </footer>
+
+  <script>
+    function toggleHomeTheme() {
+      var body = document.body;
+      var btn = document.getElementById('themeToggle');
+      body.classList.toggle('dark-mode');
+      if (body.classList.contains('dark-mode')) {
+        btn.innerHTML = '☀️';
+        btn.title = 'Switch to light mode';
+        localStorage.setItem('theme', 'dark');
+      } else {
+        btn.innerHTML = '🌙';
+        btn.title = 'Switch to dark mode';
+        localStorage.setItem('theme', 'light');
+      }
+    }
+    (function () {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('themeToggle').innerHTML = '☀️';
+      }
+    })();
+  </script>
 </body>
-
 </html>
-
