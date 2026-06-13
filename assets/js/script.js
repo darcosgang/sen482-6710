@@ -14,11 +14,11 @@ function toggleTheme() {
   body.classList.toggle("dark-mode");
 
   if (body.classList.contains("dark-mode")) {
-    btn.innerHTML = "☀️";
+    btn.innerHTML = "Light";
     btn.title = "Switch to light mode";
     localStorage.setItem("theme", "dark");
   } else {
-    btn.innerHTML = "🌙";
+    btn.innerHTML = "Theme";
     btn.title = "Switch to dark mode";
     localStorage.setItem("theme", "light");
   }
@@ -33,10 +33,10 @@ window.addEventListener("DOMContentLoaded", function () {
   if (btn) {
     if (theme === "dark") {
       body.classList.add("dark-mode");
-      btn.innerHTML = "☀️";
+      btn.innerHTML = "Light";
       btn.title = "Switch to light mode";
     } else {
-      btn.innerHTML = "🌙";
+      btn.innerHTML = "Theme";
       btn.title = "Switch to dark mode";
     }
   }

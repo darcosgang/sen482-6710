@@ -10,26 +10,45 @@
 </head>
 
 <body>
-  <a href="index.html" class="btn btn-outline-secondary"
-     style="position:fixed;top:20px;left:20px;z-index:1001;border-radius:14px;font-weight:600;padding:6px 16px;"
-     title="Back to Home">← Home</a>
-  <button class="btn btn-outline-secondary theme-toggle-btn" id="theme-toggle" onclick="toggleTheme()"
-    title="Toggle dark/light mode">
-    🌙
-  </button>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-6 col-md-6 col-sm-8">
-        <div class="border border-dotted border-3 rounded-3 p-3 mb-4 bg-white bg-opacity-50">
-          <h4 class="text-center group-header mb-0">VUNA CALCULATOR</h4>
-          <p class="text-center text-small text-muted">
-            <i>Created by set 2025/26 Software Engineering</i>
-          </p>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="card calculator-card">
-              <div class="card-body p-4">
+  <header class="calc-header" aria-label="Calculator navigation">
+    <a class="brand-mark" href="index.html">VUNA Calc<sup>CAM</sup></a>
+    <div class="header-actions">
+      <a href="index.html" class="nav-link-pill" title="Back to Home">Home</a>
+      <button class="nav-link-pill theme-toggle-btn" id="theme-toggle" onclick="toggleTheme()"
+        title="Toggle dark/light mode">
+        Theme
+      </button>
+    </div>
+  </header>
+
+  <main class="calculator-page">
+    <section class="calculator-hero" aria-labelledby="calculator-title">
+      <div class="calculator-intro">
+        <div class="eyebrow">Live equation workstation</div>
+        <h1 id="calculator-title">Calculate. Scan. Upload.</h1>
+        <p>
+          Use the keypad for direct math, or open CAM to capture and solve equations from your camera or image gallery.
+        </p>
+      </div>
+
+      <div class="calculator-layout">
+        <aside class="scanner-panel" aria-label="Scanner feature summary">
+          <div class="panel-label">CAM solver</div>
+          <div class="scan-frame">
+            <div class="scan-status">OCR ready</div>
+            <div class="scan-equation">7(12 - 5) + 3</div>
+            <div class="scan-line" aria-hidden="true"></div>
+          </div>
+          <p>Open the camera or upload an equation image. The recognized expression is sent straight to this calculator.</p>
+        </aside>
+
+        <div class="calculator-column">
+          <div class="calculator-kicker">
+            <h2 class="group-header mb-0">VUNA Calculator</h2>
+            <span>Set 2025/26 Software Engineering</span>
+          </div>
+          <div class="card calculator-card">
+            <div class="card-body p-4">
                 <div class="calculator">
                   <div class="display-container">
                     <input type="text" class="form-control" id="result" placeholder="0" disabled />
@@ -70,24 +89,24 @@
                     <button class="btn btn-operator" onclick="operatorToResult('-')">−</button>
 
                     <button class="btn btn-equals" onclick="calculateResult()" style="grid-column: span 4;">=</button>
-                    <button class="btn btn-special" onclick="openCamera()" style="margin-top: 12px; grid-column: span 4;">📷 CAM</button>
+                    <button class="btn btn-special" onclick="openCamera()" style="margin-top: 12px; grid-column: span 4;">CAM Scanner</button>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+        </div>
 
           <div class="camera-solver-modal" id="cameraModal">
             <div class="camera-solver-card">
-              <h5 style="font-weight: 700; margin-bottom: 12px;">📷 Equation Scanner</h5>
+              <h5 style="font-weight: 700; margin-bottom: 12px;">Equation Scanner</h5>
               <video class="camera-solver-preview" id="cameraPreview" autoplay playsinline></video>
               <canvas class="camera-solver-canvas" id="cameraCanvas"></canvas>
               <input type="file" id="imageUpload" accept="image/png,image/jpeg" style="display:none">
               <div class="camera-solver-toolbar">
-                <button class="btn btn-outline-secondary" onclick="closeCamera()">✕ Close</button>
-                <button class="btn btn-primary" onclick="captureEquation()" id="captureBtn">📸 Capture & Solve</button>
-                <button class="btn btn-outline-info" onclick="toggleCamera()" id="toggleCamBtn">🔄 Flip Camera</button>
-                <button class="btn btn-success" onclick="triggerUpload()" id="uploadBtn">📁 Upload Image</button>
+                <button class="btn btn-outline-secondary" onclick="closeCamera()">Close</button>
+                <button class="btn btn-primary" onclick="captureEquation()" id="captureBtn">Capture & Solve</button>
+                <button class="btn btn-outline-info" onclick="toggleCamera()" id="toggleCamBtn">Flip Camera</button>
+                <button class="btn btn-success" onclick="triggerUpload()" id="uploadBtn">Upload Image</button>
               </div>
               <div class="camera-solver-status" id="cameraStatus">Point the camera at an equation and tap "Capture & Solve"</div>
               <div class="camera-solver-result" id="cameraResult" style="display: none;">
@@ -104,10 +123,9 @@
           <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
           <script src="assets/js/script.js"></script>
           <button id="scroll-to-calculator" title="Back to Calculator">↑</button>
-        </div>
       </div>
-    </div>
-  </div>
+    </section>
+  </main>
 </body>
 
 </html>
