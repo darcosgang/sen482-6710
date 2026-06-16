@@ -1,7 +1,8 @@
 // ===============================
 // 🧠 SMART RESULT MEMORY FEATURE
 // ===============================
-// LAST_RESULT is declared in src/calculator.js as a global variable
+// LAST_RESULT is stored here so calculator pages can remember the last answer.
+var LAST_RESULT = 0;
 var currentExpression = "";
 
 // ------------------------------
@@ -91,11 +92,24 @@ function backspace() {
 }
 
 function operatorToResult(value) {
-  if (value === "^") {
-    currentExpression += "**";
+  if (currentExpression === "" && value !== "-") {
+    if (LAST_RESULT !== undefined && LAST_RESULT !== null && LAST_RESULT !== "") {
+      currentExpression = String(LAST_RESULT);
+    } else {
+      return;
+    }
+  }
+
+  if (/[+\-*/^]$/.test(currentExpression)) {
+    if (value === "-" && currentExpression.slice(-1) !== "-") {
+      currentExpression += value;
+    } else {
+      currentExpression = currentExpression.replace(/[+\-*/^]+$/, value);
+    }
   } else {
     currentExpression += value;
   }
+
   updateResult();
 }
 
@@ -107,6 +121,9 @@ function clearResult() {
 
 function normalizeExpression(expr) {
   return expr
+    .replace(/[×✕]/g, "*")
+    .replace(/[÷]/g, "/")
+    .replace(/[−–—]/g, "-")
     .replace(/asin\(/g, "asinDeg(")
     .replace(/acos\(/g, "acosDeg(")
     .replace(/atan\(/g, "atanDeg(")
@@ -162,41 +179,51 @@ function percentToResult() {
 // ------------------------------
 function calculateExpression(expression) {
   try {
-    let normalizedExpression = normalizeExpression(expression);
+    let normalizedExpression = normalizeExpression(expression.trim());
 
     normalizedExpression = normalizedExpression.replace(
       /\bans\b/gi,
       LAST_RESULT,
     );
 
+    if (/^[+\/*^]/.test(normalizedExpression)) {
+      normalizedExpression = LAST_RESULT + normalizedExpression;
+    }
+
+    if (/[+\-*/^]$/.test(normalizedExpression)) {
+      normalizedExpression = normalizedExpression.slice(0, -1);
+    }
+
     let result = evaluateExpression(normalizedExpression);
     console.log("Calculated result for expression:", expression, "->", result);
 
     return result;
   } catch (e) {
+    console.error("Calculation error:", e, expression);
     return "Error";
   }
 }
+
 function calculateResult() {
   if (!currentExpression) return;
-    const display = document.getElementById("result"); 
-    // Calculate result
-    let result = calculateExpression(currentExpression);
-    result = String(result);
 
-    // Save result for future expressions
-    LAST_RESULT = result;
+  const display = document.getElementById("result");
 
-    // Display normally
+  let result = calculateExpression(currentExpression);
+  if (result === "Error") {
     display.value = result;
+    return;
+  }
 
-    currentExpression = result;
-    updateResult();
+  result = String(result);
+  LAST_RESULT = result;
+  currentExpression = result;
+  display.value = result;
 }
 
-
 function updateResult() {
-  document.getElementById("result").value = currentExpression || "0";
+  var display = document.getElementById("result");
+  display.value = currentExpression || '0';
 }
 
 // ===============================

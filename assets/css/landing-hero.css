@@ -1,0 +1,81 @@
+/* landing-hero.css - styles for the hero landing page */
+:root {
+  --accent: #ff5a1f;
+  --hero-bg: linear-gradient(180deg,#0b0b0b 0%, #2b1212 100%);
+  --muted-hero: rgba(255,255,255,0.85);
+}
+
+body {
+  background: var(--hero-bg);
+  color: #fff;
+}
+
+.landing-hero {
+  width: 100%;
+  padding: 48px 24px;
+}
+
+.hero-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 28px;
+  align-items: center;
+}
+
+.hero-left {
+  flex: 1 1 60%;
+}
+
+.hero-right {
+  flex: 1 1 40%;
+}
+
+.eyebrow {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  color: var(--muted-hero);
+  font-weight: 800;
+  margin-bottom: 18px;
+}
+
+.hero-left h1 {
+  font-family: Impact, "Arial Narrow", sans-serif;
+  font-size: 4rem;
+  line-height: 0.9;
+  margin: 0 0 12px;
+  letter-spacing: -0.02em;
+}
+
+.lead {
+  color: rgba(255,255,255,0.85);
+  max-width: 540px;
+}
+
+.cta {
+  display: inline-block;
+  margin-top: 18px;
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  text-decoration: none;
+}
+
+.cta.primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.card-highlight {
+  background: rgba(255,255,255,0.04);
+  padding: 20px;
+  border-radius: 10px;
+}
+
+@media (max-width: 800px) {
+  .hero-inner { flex-direction: column; }
+  .hero-left h1 { font-size: 2.2rem; }
+}
